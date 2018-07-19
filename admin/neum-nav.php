@@ -5,7 +5,7 @@
       <h3 class="name"><?php echo $_SESSION['nickname']; ?></h3>
     </div>
     <ul class="nav">
-      <li class="active">
+      <li class="<?php echo $visitor =='index'?'active':'' ?>">
         <a href="index.php"><i class="fa fa-dashboard"></i>仪表盘</a>
       </li>
       <li>
@@ -16,7 +16,7 @@
            <?php 
             //判断变量$visitor是否在数组中存在['posts','categories']
              if(isset($visitor)){
-                if(in_array($visitor,['posts','categories','getBooks'])){
+                if(in_array($visitor,['posts','categories','getBooks','index','comments'])){
                    echo 'in';
                 }
              }
@@ -27,7 +27,7 @@
           <li class="<?php echo $visitor =='categories'?'active':'' ?>"><a href="categories.php">分类目录</a></li>
         </ul>
       </li>
-      <li>
+      <li class="<?php echo $visitor =='comments'?'active':'' ?>">
         <a href="comments.php"><i class="fa fa-comments"></i>评论</a>
       </li>
       <li>

@@ -3,6 +3,8 @@
    //检查是否有登录
    isLogin();
    // session_start();
+   //用一个变量存储当前访问的页面
+   $visitor = 'index';
  ?>
 <!DOCTYPE html>
 <html lang="zh-CN">

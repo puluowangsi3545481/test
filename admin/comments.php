@@ -2,7 +2,9 @@
 include_once "../function.php"  ;
 //检测是否有登录
 isLogin();
-session_start(); //开启session会话
+//session_start(); //开启session会话
+//用一个变量存储当前访问的页面
+   $visitor = 'comments';
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -54,7 +56,7 @@ session_start(); //开启session会话
           </tr>
         </thead>
         <tbody>
-          <tr class="danger">
+          <tr>
             <td class="text-center"><input type="checkbox"></td>
             <td>大大</td>
             <td>楼主好人，顶一个</td>
