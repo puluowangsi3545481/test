@@ -36,11 +36,11 @@ isLogin();
           <button class="btn btn-danger btn-sm">批量删除</button>
         </div>
         <ul class="pagination pagination-sm pull-right">
-          <li><a href="#">上一页</a></li>
+         <!--  <li><a href="#">上一页</a></li>
           <li><a href="#">1</a></li>
           <li><a href="#">2</a></li>
           <li><a href="#">3</a></li>
-          <li><a href="#">下一页</a></li>
+          <li><a href="#">下一页</a></li> -->
         </ul>
       </div>
       <table class="table table-striped table-bordered table-hover">
@@ -56,42 +56,7 @@ isLogin();
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td class="text-center"><input type="checkbox"></td>
-            <td>大大</td>
-            <td>楼主好人，顶一个</td>
-            <td>《Hello world》</td>
-            <td>2016/10/07</td>
-            <td>未批准</td>
-            <td class="text-center">
-              <a href="post-add.php" class="btn btn-info btn-xs">批准</a>
-              <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
-            </td>
-          </tr>
-          <tr>
-            <td class="text-center"><input type="checkbox"></td>
-            <td>大大</td>
-            <td>楼主好人，顶一个</td>
-            <td>《Hello world》</td>
-            <td>2016/10/07</td>
-            <td>已批准</td>
-            <td class="text-center">
-              <a href="post-add.php" class="btn btn-warning btn-xs">驳回</a>
-              <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
-            </td>
-          </tr>
-          <tr>
-            <td class="text-center"><input type="checkbox"></td>
-            <td>大大</td>
-            <td>楼主好人，顶一个</td>
-            <td>《Hello world》</td>
-            <td>2016/10/07</td>
-            <td>已批准</td>
-            <td class="text-center">
-              <a href="post-add.php" class="btn btn-warning btn-xs">驳回</a>
-              <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
-            </td>
-          </tr>
+
         </tbody>
       </table>
     </div>
@@ -102,5 +67,63 @@ isLogin();
   
   <script src="..//static/assets/vendors/jquery/jquery.js"></script>
   <script src="..//static/assets/vendors/bootstrap/js/bootstrap.js"></script>
+  <script src="/static/assets/vendors/art-template/template-web.js"></script>
+  <script src="/static/plugins/jquery.twbsPagination.js"></script>
+  <!-- 定义模板引擎 -->
+  <script type="text/template" id="tmpl">
+    {{each data val }}
+      <tr>
+        <td class="text-center"><input type="checkbox" value="{{val.comment_id}}"></td>
+        <td>{{val.author}}</td>
+        <td>楼主好人，顶一个</td>
+        <td>{{val.title}}</td>
+        <td>{{val.created}}</td>
+        <td>
+          {{if val.status == 'held'}}
+             待审核
+          {{else if val.status == 'approved'}} 
+             准许
+          {{else if val.status == 'rejected'}} 
+             拒绝
+          {{else}}
+             回收站      
+          {{/if}}
+        </td>
+        <td class="text-center">
+          <a href="post-add.php" class="btn btn-info btn-xs">批准</a>
+          <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
+        </td>
+      </tr>
+    {{/each}}  
+  </script>
 </body>
+<script type="text/javascript">
+     function getCommentsData(page){
+         //1, ajax获取评论数据
+         $.get("../api/getCommentsData.php",{'page':page},function(res){
+              // console.log(res);
+              if(res.code == 200){
+                 //渲染页面
+                 var tbody = template('tmpl',{'data':res.data});
+                 //渲染到tbody结构中去
+                 $('tbody').html(tbody); 
+                 //绘制分页页码
+                 $('.pagination').twbsPagination({
+                  totalPages: res.pageCount, // 总的页码数(若此总页码要重置分页页码（执行3行代码）)
+                  visiblePages: 7, //显示的页码数
+                  initiateStartPageClick: false,  //取消默认点击
+                  first:"首页",
+                  prev:"上一页",
+                  next:"下一页",
+                  last:"尾页",
+                  onPageClick: function (event, page) {
+                       getCommentsData(page);
+                  }
+                }); 
+              }
+         },'json');
+     }
+     //2,调用上面函数
+     getCommentsData(1);
+</script>  
 </html>

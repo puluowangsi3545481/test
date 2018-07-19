@@ -32,10 +32,8 @@
             <div class="panel-heading">
               <h3 class="panel-title">站点内容统计：</h3>
             </div>
-            <ul class="list-group">
-              <li class="list-group-item"><strong>10</strong>篇文章（<strong>2</strong>篇草稿）</li>
-              <li class="list-group-item"><strong>6</strong>个分类</li>
-              <li class="list-group-item"><strong>5</strong>条评论（<strong>1</strong>条待审核）</li>
+            <ul class="list-group" id="count">
+             
             </ul>
           </div>
         </div>
@@ -48,5 +46,22 @@
   <?php include_once "./neum-nav.php"; ?>
   <script src="/static/assets/vendors/jquery/jquery.js"></script>
   <script src="/static/assets/vendors/bootstrap/js/bootstrap.js"></script>
+  <script src="/static/assets/vendors/art-template/template-web.js"></script><!--引入模板引擎-->
 </body>
+  <script type="text/template" id="tmpl">
+       <li class="list-group-item"><strong>{{res.postsCount}}</strong>篇文章（<strong>{{res.draftedCount}}</strong>篇草稿）</li>
+       <li class="list-group-item"><strong>{{res.catsCount}}</strong>个分类</li>
+       <li class="list-group-item"><strong>{{res.commentsCount}}</strong>条评论（<strong>{{res.heldCount}}</strong>条待审核）</li>
+  </script>
+  <script type="text/javascript">
+      //发送之前给加载的提示....
+      $('#count').html('正在加载中...'); 
+      //ajax获取统计总数
+      $.get('../api/getCountData.php','',function(res){
+          // console.log(res);
+          //调用模板引擎渲染页面
+          var html = template('tmpl',{'res':res});
+          $('#count').html(html);
+      },'json');
+  </script>
 </html>
